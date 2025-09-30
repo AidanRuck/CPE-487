@@ -6,18 +6,27 @@ entity TFF is
 port( T: in std_logic;
 clk: in std_logic;
 rst: in std_logic;
+set: in std_logic;
 Q: out std_logic);
 end TFF;
 
-architecture behavioral of TFF is
+architecture rt1 of TFF is
+    signal q_reg : std_logic := '0';
 begin
-process(rst,clk,T)
+    Q <= q_reg;
+process(set,rst,clk)
 begin
-if (rst='1') then
-Q<='0';
+if (set='1') then
+    q_reg <= '1';
+elsif(rst = '1') then
+    q_reg <= '0';
 elsif(rising_edge(clk)) then
-Q<=not T;
+    if(T = '1') then
+        q_reg <= not q_reg;
+    else
+        q_reg <= q_reg;
+    end if;
 end if;
 end process;
 
-end behavioral;
+end architecture rt1;
